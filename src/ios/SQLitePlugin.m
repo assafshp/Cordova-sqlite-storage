@@ -141,8 +141,9 @@ static void sqlite_regexp(sqlite3_context* context, int argc, sqlite3_value** va
             /* Option to create from resource (pre-populated) if db does not exist: */
             if (![[NSFileManager defaultManager] fileExistsAtPath:dbname]) {
                 NSString *createFromResource = [options objectForKey:@"createFromResource"];
+                NSString *targetDbName = [options objectForKey:@"targetDbName"];
                 if (createFromResource != NULL)
-                    [self createFromResource:dbfilename withDbname:dbname];
+                    [self createFromResource:dbfilename withDbname:dbname withTargetDbName: targetDbName];
             }
 
             if (sqlite3_open(name, &db) != SQLITE_OK) {
@@ -183,19 +184,25 @@ static void sqlite_regexp(sqlite3_context* context, int argc, sqlite3_value** va
 }
 
 
--(void)createFromResource:(NSString *)dbfile withDbname:(NSString *)dbname {
+-(void)createFromResource:(NSString *)dbfile withDbname:(NSString *)dbname withTargetDbName:(NSString *)targetDbName {
     NSString *bundleRoot = [[NSBundle mainBundle] resourcePath];
     NSString *www = [bundleRoot stringByAppendingPathComponent:@"www"];
     NSString *prepopulatedDb = [www stringByAppendingPathComponent: dbfile];
     // NSLog(@"Look for prepopulated DB at: %@", prepopulatedDb);
 
+    NSString *targetDb = dbname;
+    if (targetDbName.length !=0 ){
+        NSString *dbPath = [dbname stringByDeletingLastPathComponent];
+        targetDb = [dbPath stringByAppendingPathComponent: targetDbName];
+    }
+
     if ([[NSFileManager defaultManager] fileExistsAtPath:prepopulatedDb]) {
         NSLog(@"Found prepopulated DB: %@", prepopulatedDb);
         NSError *error;
-        BOOL success = [[NSFileManager defaultManager] copyItemAtPath:prepopulatedDb toPath:dbname error:&error];
+        BOOL success = [[NSFileManager defaultManager] copyItemAtPath:prepopulatedDb toPath:targetDb error:&error];
 
         if(success)
-            NSLog(@"Copied prepopulated DB content to: %@", dbname);
+            NSLog(@"Copied prepopulated DB content to: %@", targetDb);
         else
             NSLog(@"Unable to copy DB file: %@", [error localizedDescription]);
     }

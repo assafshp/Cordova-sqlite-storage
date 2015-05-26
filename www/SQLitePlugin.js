@@ -542,6 +542,7 @@
       if (!!openargs.androidLockWorkaround && openargs.androidLockWorkaround === 1) {
         openargs.androidBugWorkaround = 1;
       }
+      openargs.targetDbName = args[0].targetDbName;
       return new SQLitePlugin(openargs, okcb, errorcb);
     }),
     deleteDb: function(first, success, error) {
