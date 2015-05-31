@@ -142,7 +142,12 @@ static void sqlite_regexp(sqlite3_context* context, int argc, sqlite3_value** va
             if (![[NSFileManager defaultManager] fileExistsAtPath:dbname]) {
                 NSString *createFromResource = [options objectForKey:@"createFromResource"];
                 NSString *targetDbName = [options objectForKey:@"targetDbName"];
-                if (createFromResource != NULL)
+                BOOL targetExists = NO;
+                if (targetDbName != NULL) {
+                    NSString *targetPath = [self getDBPath:targetDbName at:dblocation];
+                    targetExists = [[NSFileManager defaultManager] fileExistsAtPath:targetPath];
+                }
+                if (createFromResource != NULL && !targetExists)
                     [self createFromResource:dbfilename withDbname:dbname withTargetDbName: targetDbName];
             }
 
