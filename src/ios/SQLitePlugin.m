@@ -141,18 +141,9 @@ static void sqlite_regexp(sqlite3_context* context, int argc, sqlite3_value** va
             /* Option to create from resource (pre-populated) if db does not exist: */
             if (![[NSFileManager defaultManager] fileExistsAtPath:dbname]) {
                 NSString *createFromResource = [options objectForKey:@"createFromResource"];
-                NSString *targetDbName = [options objectForKey:@"targetDbName"];
+                NSString *sourceDbName = [options objectForKey:@"sourceDbName"];
                 if (createFromResource != NULL) {
-                    BOOL targetExists = NO;
-                    if (targetDbName != NULL) {
-                        NSString *targetPath = [self getDBPath:targetDbName at:dblocation];
-                        targetExists = [[NSFileManager defaultManager] fileExistsAtPath:targetPath];
-                        name = [targetPath UTF8String];
-                    }
-
-                    if (!targetExists) {
-                        [self createFromResource:dbfilename withDbname:dbname withTargetDbName: targetDbName];
-                    }
+                    [self createFromResource:dbfilename withDbname:dbname withSourceDbName: sourceDbName];
                 }
             }
 
@@ -194,25 +185,22 @@ static void sqlite_regexp(sqlite3_context* context, int argc, sqlite3_value** va
 }
 
 
--(void)createFromResource:(NSString *)dbfile withDbname:(NSString *)dbname withTargetDbName:(NSString *)targetDbName {
+-(void)createFromResource:(NSString *)dbfile withDbname:(NSString *)dbname withSourceDbName:(NSString *)sourceDbName {
     NSString *bundleRoot = [[NSBundle mainBundle] resourcePath];
     NSString *www = [bundleRoot stringByAppendingPathComponent:@"www"];
     NSString *prepopulatedDb = [www stringByAppendingPathComponent: dbfile];
-    // NSLog(@"Look for prepopulated DB at: %@", prepopulatedDb);
-
-    NSString *targetDb = dbname;
-    if (targetDbName.length !=0 ){
-        NSString *dbPath = [dbname stringByDeletingLastPathComponent];
-        targetDb = [dbPath stringByAppendingPathComponent: targetDbName];
+    if (sourceDbName.length !=0 ){
+        prepopulatedDb = [www stringByAppendingPathComponent: sourceDbName];
     }
+    // NSLog(@"Look for prepopulated DB at: %@", prepopulatedDb);
 
     if ([[NSFileManager defaultManager] fileExistsAtPath:prepopulatedDb]) {
         NSLog(@"Found prepopulated DB: %@", prepopulatedDb);
         NSError *error;
-        BOOL success = [[NSFileManager defaultManager] copyItemAtPath:prepopulatedDb toPath:targetDb error:&error];
+        BOOL success = [[NSFileManager defaultManager] copyItemAtPath:prepopulatedDb toPath:dbname error:&error];
 
         if(success)
-            NSLog(@"Copied prepopulated DB content to: %@", targetDb);
+            NSLog(@"Copied prepopulated DB content to: %@", dbname);
         else
             NSLog(@"Unable to copy DB file: %@", [error localizedDescription]);
     }
