@@ -210,7 +210,7 @@ public class SQLitePlugin extends CordovaPlugin {
             // [should be true according to the code in DBRunner.run()]
 
             File dbfile = this.cordova.getActivity().getDatabasePath(dbname);
-            Log.v(SQLitePlugin.class.getSimpleName(), "dbFile: " + dbFile);
+            Log.v(SQLitePlugin.class.getSimpleName(), "dbFile: " + dbFile.getAbsolutePath());
             Log.v(SQLitePlugin.class.getSimpleName(), "exists? " + dbfile.exists());
             Log.v(SQLitePlugin.class.getSimpleName(), "createFromAssets? " + createFromAssets);
 
