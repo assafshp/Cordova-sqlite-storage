@@ -591,7 +591,10 @@ public class SQLitePlugin extends CordovaPlugin {
             this.bugWorkaround = this.oldImpl && options.has("androidBugWorkaround");
             if (this.bugWorkaround)
                 Log.v(SQLitePlugin.class.getSimpleName(), "Android db closing/locking workaround applied");
-            this.sourceDbName = (options.has("sourceDbName") ? options.getString("sourceDbName") : null);
+            try {
+                this.sourceDbName = (options.has("sourceDbName") ? options.getString("sourceDbName") : null);
+            } catch (JSONException ignored) {
+            }
 
             this.q = new LinkedBlockingQueue<DBQuery>();
             this.openCbc = cbc;
