@@ -210,9 +210,6 @@ public class SQLitePlugin extends CordovaPlugin {
             // [should be true according to the code in DBRunner.run()]
 
             File dbfile = this.cordova.getActivity().getDatabasePath(dbname);
-            Log.v(SQLitePlugin.class.getSimpleName(), "dbFile: " + dbFile.getAbsolutePath());
-            Log.v(SQLitePlugin.class.getSimpleName(), "exists? " + dbfile.exists());
-            Log.v(SQLitePlugin.class.getSimpleName(), "createFromAssets? " + createFromAssets);
 
             if (!dbfile.exists() && createFromAssets) this.createFromAssets(dbname, dbfile, sourceDbName);
 
@@ -596,7 +593,6 @@ public class SQLitePlugin extends CordovaPlugin {
                 Log.v(SQLitePlugin.class.getSimpleName(), "Android db closing/locking workaround applied");
             try {
                 this.sourceDbName = (options.has("sourceDbName") ? options.getString("sourceDbName") : null);
-                Log.v(SQLitePlugin.class.getSimpleName(), "SourceDbName: " + this.sourceDbName);
             } catch (JSONException ignored) {
             }
 
