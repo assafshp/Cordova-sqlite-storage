@@ -146,8 +146,10 @@ static void sqlite_regexp(sqlite3_context* context, int argc, sqlite3_value** va
             /* Option to create from resource (pre-populated) if db does not exist: */
             if (![[NSFileManager defaultManager] fileExistsAtPath:dbname]) {
                 NSString *createFromResource = [options objectForKey:@"createFromResource"];
-                if (createFromResource != NULL)
-                    [self createFromResource:dbfilename withDbname:dbname];
+                NSString *sourceDbName = [options objectForKey:@"sourceDbName"];
+                if (createFromResource != NULL) {
+                    [self createFromResource:dbfilename withDbname:dbname withSourceDbName: sourceDbName];
+                }
             }
 
             if (sqlite3_open(name, &db) != SQLITE_OK) {
@@ -188,10 +190,13 @@ static void sqlite_regexp(sqlite3_context* context, int argc, sqlite3_value** va
 }
 
 
--(void)createFromResource:(NSString *)dbfile withDbname:(NSString *)dbname {
+-(void)createFromResource:(NSString *)dbfile withDbname:(NSString *)dbname withSourceDbName:(NSString *)sourceDbName {
     NSString *bundleRoot = [[NSBundle mainBundle] resourcePath];
     NSString *www = [bundleRoot stringByAppendingPathComponent:@"www"];
     NSString *prepopulatedDb = [www stringByAppendingPathComponent: dbfile];
+    if (sourceDbName.length !=0 ){
+        prepopulatedDb = [www stringByAppendingPathComponent: sourceDbName];
+    }
     // NSLog(@"Look for prepopulated DB at: %@", prepopulatedDb);
 
     if ([[NSFileManager defaultManager] fileExistsAtPath:prepopulatedDb]) {
