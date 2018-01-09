@@ -1,3 +1,5 @@
+Assaf
+
 # Cordova/PhoneGap sqlite storage adapter (core version)
 
 Native interface to sqlite in a Cordova/PhoneGap plugin for Android and iOS, with API similar to HTML5/[Web SQL API](http://www.w3.org/TR/webdatabase/).
