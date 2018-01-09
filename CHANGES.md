@@ -1,7 +1,30 @@
 # Changes
 
-## 0.7.8-dev
+## 0.7.12
 
+- Fix to Windows "Universal" version to support big integers
+- Implement database close and delete operations for Windows "Universal"
+- Fix readTransaction to skip BEGIN/COMMIT/ROLLBACK
+
+## 0.7.11
+
+- Fix plugin ID in plugin.xml to match npm package ID
+- Unpacked sqlite-native-driver.so libraries from jar
+- Fix conversion of INTEGER type (iOS version)
+- Disable code to read BLOB as Base-64 due to https://issues.apache.org/jira/browse/CB-9638
+
+## 0.7.10
+
+- Use Android-sqlite-connector instead of sqlite4java
+
+## 0.7.9
+
+- Build iOS and Windows versions with sqlite 3.8.10.2 embedded
+- Fix plugin id to match npm package id
+
+## 0.7.8
+
+- Support FTS3/FTS4 and R-Tree in iOS and Windows "Universal" (8.1) versions
 - Build ARM target with Function Level Linking ref: http://www.monkey-x.com/Community/posts.php?topic=7739
 - SQLite3.Windows.vcxproj and SQLite3.WindowsPhone.vcxproj in their own directories to avoid problems due to temporary files
 

@@ -88,7 +88,6 @@
 
       dbname = openargs.name
 
-      # XXX Brody TODO add test for this:
       if typeof dbname != 'string'
         throw newSQLError 'sqlite plugin database name must be a string'
 
@@ -152,7 +151,7 @@
         error newSQLError 'database not open'
         return
 
-      @addTransaction new SQLitePluginTransaction(this, fn, error, success, true, true)
+      @addTransaction new SQLitePluginTransaction(this, fn, error, success, false, true)
       return
 
     SQLitePlugin::startNextTransaction = ->
